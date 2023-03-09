@@ -5,35 +5,30 @@ using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
-    // Start is called before the first frame update
     [SerializeField] GameObject projectile;
     [SerializeField] Transform projectileSpawn;
-    [SerializeField] float fireRate = 1.0f;
-    bool spawn;
+    [SerializeField] LayerMask projectileLayer;
+    [SerializeField] string projectileTag;
+    private ObjectPool pool;
+    private int projectileLayerIndex;
 
-    float t = 1;
+    private ProjectileStats projectileStats;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        t += Time.deltaTime; 
-        if (Input.GetMouseButtonDown(0))
-        {
-            spawn = true;
-        } else if (Input.GetMouseButtonUp(0))
-        {
-            spawn= false;
-        }
+        pool = ObjectPool.instance;
+        projectileLayerIndex = GameManager.instance.LayerToIndex(projectileLayer);
+        projectileStats = GetComponent<ProjectileStats>();
+    }
+    
 
-        if (spawn && t > 1 / fireRate)
-        {
-            Object p = Instantiate(projectile, projectileSpawn.position, transform.rotation);
-            if (p is GameObject)
-            {
-                ProjectileDestroy projectileDestroy = p.GetComponent<ProjectileDestroy>();
-                projectileDestroy.source = transform;
-            }
-            t = 0; 
-        }
+
+    public void Shoot()
+    {
+        MyGameObject p = pool.SpawnObject(projectileTag);
+        p.gameObject.layer = projectileLayerIndex;
+        p.gameObject.transform.position = projectileSpawn.position;
+        p.gameObject.transform.transform.rotation = projectileSpawn.rotation;
+        p.activation.OnActive(projectileStats);
     }
 }
