@@ -13,16 +13,12 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private Rigidbody2D rb;
 
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private float moveAcceleration;
-    [SerializeField] private float moveSpeed;
-
     [SerializeField] private GunScript gun;
 
     [SerializeField] private float fireRate;
     private bool fire;
     private float currentTime = 1;
-
+    private ShipStats stats;
 
     private Vector2 moveDir;
 
@@ -33,6 +29,7 @@ public class PlayerController : MonoBehaviour
         dt = Time.fixedDeltaTime;
         rb.AddForceAtPosition(new Vector2(0, 1), new Vector2(0, 21));
         gun = GetComponentInChildren<GunScript>();
+        stats = GetComponent<ShipStats>();
     }
 
     // Update is called once per frame
@@ -69,7 +66,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.rotation = Mathf.LerpAngle(rb.rotation, angle, rotationSpeed * dt);
-        rb.velocity = Vector2.Lerp(rb.velocity, moveDir * moveSpeed, moveAcceleration * dt);
+        rb.rotation = Mathf.LerpAngle(rb.rotation, angle, stats.GetTurnSpeed() * dt);
+        rb.velocity = Vector2.Lerp(rb.velocity, moveDir * stats.GetMoveSpeed(), stats.GetMoveAcceleration() * dt);
     }
 }

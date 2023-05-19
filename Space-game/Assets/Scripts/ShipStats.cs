@@ -50,13 +50,21 @@ public class ShipStats : MonoBehaviour, IStats
     {
         if ((this.Health -= damage) <= 0)
         {
-            _onDestroy();
+            if (_onDestroy != null) _onDestroy();
+        } else
+        {
+            if (_onTakeDamage != null) _onTakeDamage();
         }
     }
 
-    public void SetOnDestroy(Action action)
+    public void AddOnDestroy(Action action)
     {
-        this._onDestroy = action;
+        this._onDestroy += action;
+    }
+
+    public void AddOnTakeDamage(Action action)
+    {
+        this._onTakeDamage += action;
     }
 
     [SerializeField] private float Health;
@@ -66,6 +74,7 @@ public class ShipStats : MonoBehaviour, IStats
     [SerializeField] private float FireRate;
     [SerializeField] private float MoveAcceleration;
     private Action _onDestroy;
+    private Action _onTakeDamage;
 
     public ShipStats(float health, float maxHealth, float moveSpeed, float turnSpeed, float fireRate, float moveAcceleration)
     {

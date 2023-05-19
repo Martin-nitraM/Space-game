@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour, IActivation
     void Awake()
     {
         dt = Time.fixedDeltaTime;
-        enemyStats.SetOnDestroy(() => {
+        enemyStats.AddOnDestroy(() => {
             gameObject.SetActive(false);
             StopCoroutine(shootCoroutine);
         });

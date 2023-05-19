@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private string EnemyTag;
     [SerializeField] private ShipStats _enemyStats;
     [SerializeField] private ProjectileStats _projectileStats;
+    [SerializeField] private float _spawnRate;
     void Start()
     {
         StartCoroutine(SpawnEnemy());
@@ -22,7 +23,7 @@ public class EnemySpawner : MonoBehaviour
             position -= GameManager.instance.player.transform.position;
             enemy.gameObject.transform.position = new Vector2(position.x, position.y);
             enemy.activation.OnActive(_enemyStats, _projectileStats);
-            yield return new WaitForSeconds(30);
+            yield return new WaitForSeconds(1 / _spawnRate);
         }
     }
 }
